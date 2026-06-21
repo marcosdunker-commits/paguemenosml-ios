@@ -1,6 +1,5 @@
-workflows:    
-  ios-app-store:
-      name: PagueMenos ML - App Store
+workflows:
+    ios-app-store:      name: PagueMenos ML - App Store
       max_build_duration: 120
       instance_type: mac_mini_m2
       integrations:
@@ -8,7 +7,7 @@ workflows:
       environment:
         ios_signing:
           distribution_type: app_store
-         bundle_identifier: br.com.paguemenosml.app
+          bundle_identifier: br.com.paguemenosml.app
         vars:
           APPLE_TEAM_ID: V6PGWZ3449
         xcode: latest

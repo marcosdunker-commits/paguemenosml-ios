@@ -1,4 +1,5 @@
-workflows:    ios-app-store:
+workflows:    
+  ios-app-store:
       name: PagueMenos ML - App Store
       max_build_duration: 120
       instance_type: mac_mini_m2

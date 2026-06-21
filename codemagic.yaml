@@ -1,43 +1,44 @@
 workflows:
-    ios-app-store:      name: PagueMenos ML - App Store
-      max_build_duration: 120
-      instance_type: mac_mini_m2
-      integrations:
-        app_store_connect: Codemagic
-      environment:
-        ios_signing:
-          distribution_type: app_store
-          bundle_identifier: br.com.paguemenosml.app
-        vars:
-          APPLE_TEAM_ID: V6PGWZ3449
-        xcode: latest
-        cocoapods: default
-      scripts:
-        - name: Install CocoaPods
-          script: |
-            cd paguemenosml-ios/src
-            pod install
-        - name: Build e Archive
-          script: |
-            cd paguemenosml-ios/src
-            xcodebuild \
-              -workspace "PagueMenos ML.xcworkspace" \
-              -scheme "PagueMenos ML" \
-              -configuration Release \
-              -archivePath $CM_BUILD_DIR/PagueMenosML.xcarchive \
-              archive \
-              CODE_SIGN_STYLE=Manual \
-              DEVELOPMENT_TEAM=V6PGWZ3449
-        - name: Exportar IPA
-          script: |
-            xcodebuild -exportArchive \
-              -archivePath $CM_BUILD_DIR/PagueMenosML.xcarchive \
-              -exportOptionsPlist export_options.plist \
-              -exportPath $CM_BUILD_DIR/ipa
-      artifacts:
-        - $CM_BUILD_DIR/ipa/*.ipa
-      publishing:
-        app_store_connect:
-          auth: integration
-          submit_to_testflight: true
-          submit_to_app_store: false
+  ios-app-store:
+    name: PagueMenos ML - App Store
+    max_build_duration: 120
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: Codemagic
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: br.com.paguemenosml.app
+      vars:
+        APPLE_TEAM_ID: V6PGWZ3449
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Install CocoaPods
+        script: |
+          cd paguemenosml-ios/src
+          pod install
+      - name: Build e Archive
+        script: |
+          cd paguemenosml-ios/src
+          xcodebuild \
+            -workspace "PagueMenos ML.xcworkspace" \
+            -scheme "PagueMenos ML" \
+            -configuration Release \
+            -archivePath $CM_BUILD_DIR/PagueMenosML.xcarchive \
+            archive \
+            CODE_SIGN_STYLE=Manual \
+            DEVELOPMENT_TEAM=V6PGWZ3449
+      - name: Exportar IPA
+        script: |
+          xcodebuild -exportArchive \
+            -archivePath $CM_BUILD_DIR/PagueMenosML.xcarchive \
+            -exportOptionsPlist export_options.plist \
+            -exportPath $CM_BUILD_DIR/ipa
+    artifacts:
+      - $CM_BUILD_DIR/ipa/*.ipa
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        submit_to_app_store: false

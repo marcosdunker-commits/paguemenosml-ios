@@ -8,8 +8,6 @@ workflows:
       environment:
         ios_signing:
           distribution_type: app_store
-          bundle_identifier: br.com.paguemenosml.app
-          certificate_pattern: PagueMenos Distribution
           provisioning_profile_pattern: PagueMenos ML App Store
         vars:
           APPLE_TEAM_ID: V6PGWZ3449

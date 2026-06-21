@@ -1,5 +1,4 @@
-workflows:
-    ios-app-store:
+workflows:    ios-app-store:
       name: PagueMenos ML - App Store
       max_build_duration: 120
       instance_type: mac_mini_m2
@@ -9,6 +8,10 @@ workflows:
         ios_signing:
           distribution_type: app_store
           bundle_identifier: br.com.paguemenosml.app
+          certificate_pattern: PagueMenos Distribution
+          provisioning_profile_pattern: PagueMenos ML App Store
+        vars:
+          APPLE_TEAM_ID: V6PGWZ3449
         xcode: latest
         cocoapods: default
       scripts:
@@ -25,8 +28,8 @@ workflows:
               -configuration Release \
               -archivePath $CM_BUILD_DIR/PagueMenosML.xcarchive \
               archive \
-              CODE_SIGN_STYLE=Automatic \
-              DEVELOPMENT_TEAM=$APPLE_TEAM_ID
+              CODE_SIGN_STYLE=Manual \
+              DEVELOPMENT_TEAM=V6PGWZ3449
         - name: Exportar IPA
           script: |
             xcodebuild -exportArchive \

@@ -372,7 +372,7 @@
 				CODE_SIGN_ENTITLEMENTS = "PagueMenos ML/Entitlements/Entitlements.plist";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "PagueMenos ML/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -381,7 +381,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				PRODUCT_BUNDLE_IDENTIFIER = "br.com.paguemenosml.app";
 				PRODUCT_NAME = "PagueMenosML";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -400,7 +400,7 @@
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_ENTITLEMENTS = "PagueMenos ML/Entitlements/Entitlements.plist";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "PagueMenos ML/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -409,7 +409,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				PRODUCT_BUNDLE_IDENTIFIER = "br.com.paguemenosml.app";
 				PRODUCT_NAME = "PagueMenosML";
 				SUPPORTS_MACCATALYST = YES;

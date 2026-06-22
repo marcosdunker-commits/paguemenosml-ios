@@ -14,10 +14,24 @@ workflows:
       xcode: latest
       cocoapods: default
     scripts:
+      - name: Remover entitlements desnecessarios
+        script: |
+          cd paguemenosml-ios/src
+          ENTITLEMENTS="PagueMenos ML/PagueMenos ML.entitlements"
+          if [ -f "$ENTITLEMENTS" ]; then
+            /usr/libexec/PlistBuddy -c "Delete :com.apple.developer.associated-domains" "$ENTITLEMENTS" 2>/dev/null || true
+            /usr/libexec/PlistBuddy -c "Delete :aps-environment" "$ENTITLEMENTS" 2>/dev/null || true
+            echo "Entitlements atualizados"
+            cat "$ENTITLEMENTS"
+          fi
+          sed -i '' 's/PUSH_NOTIFICATIONS = {enabled = 1;};/PUSH_NOTIFICATIONS = {enabled = 0;};/g' "PagueMenos ML.xcodeproj/project.pbxproj" 2>/dev/null || true
+          sed -i '' 's/ASSOCIATED_DOMAINS = {enabled = 1;};/ASSOCIATED_DOMAINS = {enabled = 0;};/g' "PagueMenos ML.xcodeproj/project.pbxproj" 2>/dev/null || true
+
       - name: Install CocoaPods
         script: |
           cd paguemenosml-ios/src
           pod install
+
       - name: Build e Archive
         script: |
           cd paguemenosml-ios/src
@@ -27,12 +41,13 @@ workflows:
             -configuration Release \
             -archivePath $CM_BUILD_DIR/PagueMenosML.xcarchive \
             archive \
-            CODE_SIGN_STYLE=Automatic \
+            CODE_SIGN_STYLE=Manual \
             DEVELOPMENT_TEAM=$APPLE_TEAM_ID \
-            -allowProvisioningUpdates
+            PROVISIONING_PROFILE_SPECIFIER="PagueMenos ML App Store"
+
       - name: Exportar IPA
         script: |
-          cat > /tmp/ExportOptions.plist << EOF
+          cat > /tmp/ExportOptions.plist << PLIST
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
@@ -40,17 +55,25 @@ workflows:
               <key>method</key>
               <string>app-store</string>
               <key>teamID</key>
-              <string>$APPLE_TEAM_ID</string>
+              <string>V6PGWZ3449</string>
+              <key>signingStyle</key>
+              <string>manual</string>
+              <key>provisioningProfiles</key>
+              <dict>
+                  <key>br.com.paguemenosml.app</key>
+                  <string>PagueMenos ML App Store</string>
+              </dict>
           </dict>
           </plist>
-          EOF
+          PLIST
           xcodebuild -exportArchive \
             -archivePath $CM_BUILD_DIR/PagueMenosML.xcarchive \
             -exportOptionsPlist /tmp/ExportOptions.plist \
-            -exportPath $CM_BUILD_DIR/ipa \
-            -allowProvisioningUpdates
+            -exportPath $CM_BUILD_DIR/ipa
+
     artifacts:
       - $CM_BUILD_DIR/ipa/*.ipa
+
     publishing:
       app_store_connect:
         auth: integration

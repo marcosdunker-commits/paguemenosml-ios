@@ -35,6 +35,11 @@ workflows:
           cd paguemenosml-ios/src
           xcode-project use-profiles
 
+      - name: Incrementar build number
+        script: |
+          cd paguemenosml-ios/src
+          xcrun agvtool new-version -all $BUILD_NUMBER
+
       - name: Build e Archive
         script: |
           cd paguemenosml-ios/src

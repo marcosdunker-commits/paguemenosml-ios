@@ -21,8 +21,6 @@ workflows:
           if [ -f "$ENTITLEMENTS" ]; then
             /usr/libexec/PlistBuddy -c "Delete :com.apple.developer.associated-domains" "$ENTITLEMENTS" 2>/dev/null || true
             /usr/libexec/PlistBuddy -c "Delete :aps-environment" "$ENTITLEMENTS" 2>/dev/null || true
-            echo "Entitlements atualizados"
-            cat "$ENTITLEMENTS"
           fi
           sed -i '' 's/PUSH_NOTIFICATIONS = {enabled = 1;};/PUSH_NOTIFICATIONS = {enabled = 0;};/g' "PagueMenos ML.xcodeproj/project.pbxproj" 2>/dev/null || true
           sed -i '' 's/ASSOCIATED_DOMAINS = {enabled = 1;};/ASSOCIATED_DOMAINS = {enabled = 0;};/g' "PagueMenos ML.xcodeproj/project.pbxproj" 2>/dev/null || true
@@ -31,6 +29,11 @@ workflows:
         script: |
           cd paguemenosml-ios/src
           pod install
+
+      - name: Configurar assinatura
+        script: |
+          cd paguemenosml-ios/src
+          xcode-project use-profiles
 
       - name: Build e Archive
         script: |
@@ -41,9 +44,7 @@ workflows:
             -configuration Release \
             -archivePath $CM_BUILD_DIR/PagueMenosML.xcarchive \
             archive \
-            CODE_SIGN_STYLE=Manual \
-            DEVELOPMENT_TEAM=$APPLE_TEAM_ID \
-            PROVISIONING_PROFILE_SPECIFIER="PagueMenos ML App Store"
+            DEVELOPMENT_TEAM=$APPLE_TEAM_ID
 
       - name: Exportar IPA
         script: |

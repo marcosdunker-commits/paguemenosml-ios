@@ -27,14 +27,28 @@ workflows:
             -configuration Release \
             -archivePath $CM_BUILD_DIR/PagueMenosML.xcarchive \
             archive \
-            CODE_SIGN_STYLE=Manual \
-            DEVELOPMENT_TEAM=V6PGWZ3449
+            CODE_SIGN_STYLE=Automatic \
+            DEVELOPMENT_TEAM=$APPLE_TEAM_ID \
+            -allowProvisioningUpdates
       - name: Exportar IPA
         script: |
+          cat > /tmp/ExportOptions.plist << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>method</key>
+              <string>app-store</string>
+              <key>teamID</key>
+              <string>$APPLE_TEAM_ID</string>
+          </dict>
+          </plist>
+          EOF
           xcodebuild -exportArchive \
             -archivePath $CM_BUILD_DIR/PagueMenosML.xcarchive \
-            -exportOptionsPlist export_options.plist \
-            -exportPath $CM_BUILD_DIR/ipa
+            -exportOptionsPlist /tmp/ExportOptions.plist \
+            -exportPath $CM_BUILD_DIR/ipa \
+            -allowProvisioningUpdates
     artifacts:
       - $CM_BUILD_DIR/ipa/*.ipa
     publishing:

@@ -1,0 +1,19 @@
+{
+  "appId": "br.com.paguemenosml.app",
+  "appName": "PagueMenos ML",
+  "webDir": "frontend",
+  "server": {
+    "url": "https://paguemenosml.shop",
+    "cleartext": false,
+    "allowNavigation": [
+      "*.mercadolivre.com.br",
+      "*.mercadopago.com",
+      "meli.la",
+      "*.meli.la"
+    ]
+  },
+  "ios": {
+    "contentInset": "automatic",
+    "allowsLinkPreview": false
+  }
+}

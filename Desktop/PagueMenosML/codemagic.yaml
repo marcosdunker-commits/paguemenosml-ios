@@ -1,0 +1,89 @@
+workflows:
+  ios-app-store:
+    name: PagueMenos ML - App Store
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: br.com.paguemenosml.app
+      vars:
+        APP_STORE_APPLE_ID: $APP_STORE_APPLE_ID
+      xcode: latest
+      cocoapods: default
+      node: latest
+
+    scripts:
+      - name: Install Capacitor
+        script: |
+          npm install
+
+      - name: Add iOS platform
+        script: |
+          if [ ! -d "ios" ]; then
+            npx cap add ios
+          else
+            npx cap sync ios
+          fi
+
+      - name: Install CocoaPods
+        script: |
+          cd ios/App
+          pod install
+
+      - name: Increment build number
+        script: |
+          cd ios/App
+          xcrun agvtool new-version -all $BUILD_NUMBER
+
+      - name: Build and archive
+        script: |
+          cd ios/App
+          xcodebuild \
+            -workspace App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -archivePath $CM_BUILD_DIR/App.xcarchive \
+            archive \
+            CODE_SIGN_STYLE=Automatic \
+            DEVELOPMENT_TEAM=$APPLE_TEAM_ID
+
+      - name: Create ExportOptions.plist
+        script: |
+          cat > /tmp/ExportOptions.plist <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>method</key>
+              <string>app-store</string>
+              <key>signingStyle</key>
+              <string>automatic</string>
+              <key>uploadBitcode</key>
+              <false/>
+              <key>compileBitcode</key>
+              <false/>
+              <key>uploadSymbols</key>
+              <true/>
+          </dict>
+          </plist>
+          PLIST
+
+      - name: Export IPA
+        script: |
+          xcodebuild -exportArchive \
+            -archivePath $CM_BUILD_DIR/App.xcarchive \
+            -exportOptionsPlist /tmp/ExportOptions.plist \
+            -exportPath $CM_BUILD_DIR/ipa
+
+    artifacts:
+      - $CM_BUILD_DIR/ipa/*.ipa
+
+    publishing:
+      app_store_connect:
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        submit_to_testflight: true
+        submit_to_app_store: false

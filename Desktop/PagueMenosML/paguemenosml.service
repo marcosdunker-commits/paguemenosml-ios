@@ -1,0 +1,17 @@
+[Unit]
+Description=PagueMenos ML - FastAPI
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=/root/PagueMenosML
+Environment="ML_CSRF_TOKEN=PFUK8wHO-2TLksU5tq6plgi14Div-jE5oeFE"
+Environment="ML_COOKIE=c_2l78kU=1; cp=88220000; ssid=ghy-052906-2WRJLhtWeMKqKoJNsbuHm1QPinZXQf-__-181398427-__-1874744411998--RRR_0-RRR_0; _csrf=lS6uQfR_K5Hqhf_PtV0uWhFo"
+Environment="EMAIL_USER=contatopaguemenosml@gmail.com"
+Environment="EMAIL_PASS=lbysrenvlibraxwf"
+ExecStart=/root/PagueMenosML/venv/bin/uvicorn backend.main:app --host 127.0.0.1 --port 8001
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
